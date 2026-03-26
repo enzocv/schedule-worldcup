@@ -369,6 +369,20 @@ const DEMO_EXTRA_MATCHES: SportMatch[] = [
       awayWin: { label: 'Turquía',   value: 9.00 },
     },
   },
+  {
+    id: 'demo-tdb-002b',
+    homeTeam: { id: 'swe', name: 'Suecia',  flagEmoji: '🇸🇪' },
+    awayTeam: { id: 'nga', name: 'Nigeria', flagEmoji: '🇳🇬' },
+    date: '2026-06-09',
+    time: '18:00',
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo B',
+    odds: {
+      homeWin: { label: 'Suecia', value: 1.25 },
+      draw:    { label: 'Empate',   value: 5.50 },
+      awayWin: { label: 'Nigeria',   value: 9.00 },
+    },
+  },
   // TBD ese mismo día – aún no se conocen los equipos
   {
     id: 'demo-tbd-001',
