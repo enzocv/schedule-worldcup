@@ -1,0 +1,124 @@
+/* ─── Contenedor principal ─── */
+
+.container {
+  position: relative;
+  min-height: 100vh;
+  background: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-primary);
+
+  margin: 0 auto;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+  /* .container {
+    max-width: 540px;
+    box-shadow: var(--shadow-xl);
+    min-height: 100vh;
+  } */
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  /* .container {
+    max-width: 480px;
+    min-height: 100vh;
+  } */
+}
+
+/* ─── Área de contenido ─── */
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  /* Empujar por debajo del header sticky */
+  scroll-behavior: smooth;
+}
+
+/* ─── Lista de días ─── */
+
+.schedule {
+  background: var(--color-gray-100);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+}
+
+/* ─── Estado vacío ─── */
+
+.empty {
+  padding: var(--spacing-12) var(--spacing-4);
+  text-align: center;
+  color: var(--color-gray-400);
+  font-size: var(--font-size-sm);
+}
+
+/* ─── Botón flotante "Cupón" ─── */
+
+.couponBtn {
+  position: fixed;
+  bottom: var(--spacing-6);
+  right: var(--spacing-4);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+  z-index: var(--z-index-fixed);
+  min-width: 52px;
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--font-primary);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.couponBtn:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-1px);
+}
+
+.couponBtn:active {
+  transform: translateY(0);
+}
+
+.couponBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--color-sport-primary);
+  color: var(--color-white);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-full);
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+/* En pantallas grandes, anclar al contenedor */
+@media (min-width: 640px) {
+  .couponBtn {
+    right: calc(50% - 270px + var(--spacing-4));
+  }
+}
+
+@media (min-width: 1024px) {
+  .couponBtn {
+    right: calc(50% - 240px + var(--spacing-4));
+  }
+}

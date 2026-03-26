@@ -1,0 +1,338 @@
+/* ─────────────────────────────────────────────────────────────
+   MatchCard – vista compacta (3 Días / Semana)
+───────────────────────────────────────────────────────────── */
+
+.compact {
+  padding: var(--spacing-2) var(--spacing-3) var(--spacing-2) var(--spacing-4);
+  border-top: 1px solid var(--color-gray-100);
+}
+
+.compact:first-child {
+  border-top: none;
+}
+
+.compactRow1 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+  margin-bottom: 2px;
+}
+
+.compactTeams {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  line-height: var(--line-height-tight);
+  flex: 1;
+  min-width: 0;
+}
+
+.compactRow2 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MatchCard – vista agenda (colapsada / expandida)
+───────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2) var(--spacing-3);
+}
+
+/* ── Header (compartido entre estados) ── */
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  /* padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-4); */
+  gap: var(--spacing-2);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cardHeader:not(.cardHeaderStatic):hover .teams {
+  color: var(--color-sport-primary);
+}
+
+.cardHeaderStatic {
+  cursor: default;
+}
+
+.cardMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.row1 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-1);
+}
+
+.teams {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  line-height: var(--line-height-tight);
+  flex: 1;
+  min-width: 0;
+}
+
+.phaseBadge {
+  font-size: 11px;
+  color: var(--color-gray-500);
+  white-space: nowrap;
+  font-weight: var(--font-weight-medium);
+  flex-shrink: 0;
+}
+
+.row2 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.metaTime {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.metaComp {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--font-size-xs);
+  color: var(--color-sport-competition);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.metaComp span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionIcons {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--color-gray-400);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-base);
+}
+
+.iconBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold); 
+  letter-spacing: 0.02em;
+  border: none;
+  line-height: 1;
+}
+
+.iconBadgePa {
+  border: 1px solid var(--color-icon-pa);
+  color: var(--color-icon-pa);
+}
+
+.iconBadgeBb {
+  border: 1px solid var(--color-icon-bb);
+  color: var(--color-icon-bb);
+}
+
+.iconBadgeSc {
+  border: 1px solid var(--color-icon-sc);
+  color: var(--color-icon-sc);
+}
+
+.chevron {
+  display: flex;
+  align-items: center;
+  color: var(--color-gray-400);
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+/* ── Body (solo en vista expandida) ── */
+
+.cardBody {
+  /* padding: 0 var(--spacing-4) var(--spacing-4); */
+}
+
+.liveBannerWrap {
+  margin: var(--spacing-2) 0 var(--spacing-3) 0;
+}
+
+.teamsDetail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-3);
+}
+
+.teamRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.flag {
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.teamName {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+}
+
+/* ── Odds ── */
+
+.oddsSection {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-3);
+}
+
+.oddsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-2);
+  gap: var(--spacing-1);
+}
+
+.oddsTitle {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+.oddsInfoIcon {
+  color: var(--color-gray-400);
+  display: flex;
+}
+
+.oddsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+}
+
+.oddCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--color-white);
+  border: 1.5px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-2) var(--spacing-1);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  font-family: inherit;
+}
+
+.oddCell:hover {
+  border-color: var(--color-sport-primary);
+}
+
+.oddCellSelected {
+  border-color: var(--color-sport-primary);
+  background: #fff1f3;
+}
+
+.oddCellSelected .oddValue {
+  color: var(--color-sport-primary);
+}
+
+.oddCellSelected .oddLabel {
+  color: var(--color-sport-primary);
+}
+
+.oddValue {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-900);
+  line-height: 1;
+}
+
+.oddLabel {
+  font-size: 11px;
+  color: var(--color-gray-500);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.oddsUnavailable {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-400);
+  text-align: center;
+  padding: var(--spacing-2) 0;
+  margin: 0;
+}
+
+/* ── Dots indicadores de mercados (decorativos) ── */
+
+.oddsDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1);
+}
+
+.oddsDotsActive {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-gray-700);
+}
+
+.oddsDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-gray-300);
+}

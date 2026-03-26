@@ -1,0 +1,72 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+}
+
+.input {
+  height: 40px;
+  padding: 0 var(--spacing-3);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  color: var(--color-gray-900);
+  background-color: var(--color-white);
+  border: var(--border-width-1) solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-gray-400);
+}
+
+.input:hover:not(:disabled) {
+  border-color: var(--color-gray-400);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.input:disabled {
+  background-color: var(--color-gray-100);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.input.error {
+  border-color: var(--color-danger);
+}
+
+.input.error:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.errorText {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+.helperText {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+}
+
+/* Estilos específicos para inputs de tipo time y date */
+.input[type="date"],
+.input[type="time"] {
+  font-family: var(--font-primary);
+}
