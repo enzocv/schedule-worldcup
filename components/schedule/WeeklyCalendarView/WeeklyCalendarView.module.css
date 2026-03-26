@@ -6,6 +6,128 @@
   background: var(--color-white);
 }
 
+/* ─── Overflow pill (días con > 2 eventos) ─── */
+
+.overflowPill {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-full);
+  background: var(--color-gray-800);
+  color: var(--color-white);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  z-index: 3;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  font-family: var(--font-primary);
+}
+
+.overflowPill:hover {
+  background: var(--color-gray-700);
+  transform: translateX(-50%) scale(1.05);
+}
+
+.overflowCount {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.overflowLabel {
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.2;
+}
+
+/* ─── Bottom sheet backdrop ─── */
+
+.sheetBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: var(--z-index-modal-backdrop);
+  animation: fadeIn var(--transition-base);
+}
+
+/* ─── Bottom sheet drawer ─── */
+
+.sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 80vh;
+  background: var(--color-white);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  box-shadow: var(--shadow-2xl);
+  z-index: var(--z-index-modal);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp var(--transition-slow);
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.sheetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4) var(--spacing-4) var(--spacing-3);
+  border-bottom: 1px solid var(--color-gray-200);
+  flex-shrink: 0;
+}
+
+.sheetTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+}
+
+.sheetClose {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--color-gray-100);
+  color: var(--color-gray-500);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.sheetClose:hover {
+  background: var(--color-gray-200);
+  color: var(--color-gray-800);
+}
+
+.sheetList {
+  overflow-y: auto;
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  -webkit-overflow-scrolling: touch;
+}
+
 /* ─── Sticky day-column header ─── */
 
 .dayHeaderRow {
@@ -165,6 +287,27 @@
   z-index: 4;
 }
 
+/* Same-hour group row wrapper */
+.eventCardRow {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  z-index: 2;
+}
+
+/* Card inside a same-hour row: flow in flex, not absolute */
+.eventCardGrouped {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  left: 0;
+  right: 0;
+}
+
 .eventCardLive {
   border-left-color: var(--color-sport-live-dot);
 }
@@ -244,6 +387,30 @@
 .modalClose:hover {
   background: var(--color-white);
   color: var(--color-gray-900);
+}
+
+/* ─── TBD event card ─── */
+
+.eventCardTbd {
+  border-left-color: var(--color-gray-300);
+  background: var(--color-gray-50);
+  cursor: default;
+}
+
+.tbdIconRow {
+  display: flex;
+  justify-content: center;
+  color: var(--color-gray-400);
+  margin-bottom: 2px;
+}
+
+.tbdTeam {
+  display: block;
+  font-size: 9px;
+  color: var(--color-gray-400);
+  text-align: center;
+  line-height: 1.4;
+  font-style: italic;
 }
 
 .nowLine {

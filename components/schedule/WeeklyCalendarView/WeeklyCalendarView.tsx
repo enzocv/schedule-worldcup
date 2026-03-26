@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { DaySchedule, SportMatch } from '@/lib/types/schedule.types';
 import Modal from '@/components/ui/Modal/Modal';
 import MatchCard from '../MatchCard/MatchCard';
+import { GlobeIcon } from '@/components/ui/Icon';
 import styles from './WeeklyCalendarView.module.css';
 
 // ─── Constants ────────────────────────────────────────────────
@@ -11,6 +12,7 @@ import styles from './WeeklyCalendarView.module.css';
 const HOUR_HEIGHT = 64; // px per hour
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const DAY_LABELS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const OVERFLOW_THRESHOLD = 2; // más de este número → mostrar pill
 
 // ─── Helpers ──────────────────────────────────────────────────
 
@@ -50,19 +52,59 @@ interface WeekDay {
 
 // ─── Sub-components ───────────────────────────────────────────
 
+interface OverflowPillProps {
+  count: number;
+  topPx: number;
+  onClick: () => void;
+}
+
+function OverflowPill({ count, topPx, onClick }: OverflowPillProps) {
+  return (
+    <button
+      type="button"
+      className={styles.overflowPill}
+      style={{ top: `${topPx}px` }}
+      onClick={onClick}
+      aria-label={`Ver ${count} eventos`}
+    >
+      <span className={styles.overflowCount}>{count}</span>
+      <span className={styles.overflowLabel}>Eventos</span>
+    </button>
+  );
+}
+
 interface EventCardProps {
   match: SportMatch;
   onClick: (match: SportMatch) => void;
+  grouped?: boolean;
 }
 
-function WeekEventCard({ match, onClick }: EventCardProps) {
+function WeekEventCard({ match, onClick, grouped }: EventCardProps) {
   const topPx = (timeToMinutes(match.time) / 60) * HOUR_HEIGHT;
+  const isTbd = match.homeTeam.name === 'Por definir' && match.awayTeam.name === 'Por definir';
+
+  if (isTbd) {
+    return (
+      <div
+        className={`${styles.eventCard} ${styles.eventCardTbd} ${grouped ? styles.eventCardGrouped : ''}`}
+        style={grouped ? undefined : { top: `${topPx}px` }}
+        aria-label={`Partido por definir, ${match.phase}`}
+      >
+        <div className={styles.tbdIconRow}>
+          <GlobeIcon size={13} />
+        </div>
+        <span className={styles.tbdTeam}>Por definir</span>
+        <span className={styles.tbdTeam}>Por definir</span>
+        <span className={styles.eventPhase}>{match.phase}</span>
+      </div>
+    );
+  }
 
   return (
     <button
       type="button"
-      className={`${styles.eventCard} ${match.isLive ? styles.eventCardLive : ''}`}
-      style={{ top: `${topPx}px` }}
+      className={`${styles.eventCard} ${match.isLive ? styles.eventCardLive : ''} ${grouped ? styles.eventCardGrouped : ''}`}
+      style={grouped ? undefined : { top: `${topPx}px` }}
       aria-label={`Ver ${match.homeTeam.name} vs ${match.awayTeam.name}, ${match.time}`}
       onClick={() => onClick(match)}
     >
@@ -106,6 +148,7 @@ export default function WeeklyCalendarView({
 }: WeeklyCalendarViewProps) {
   const [now, setNow] = useState(() => new Date());
   const [selectedMatch, setSelectedMatch] = useState<SportMatch | null>(null);
+  const [dayEventsSheet, setDayEventsSheet] = useState<{ label: string; matches: SportMatch[] } | null>(null);
   const nowLineRef = useRef<HTMLDivElement>(null);
   const scrolledRef = useRef(false);
 
@@ -199,16 +242,51 @@ export default function WeeklyCalendarView({
 
           {/* 7 day columns with events */}
           <div className={styles.daysGrid}>
-            {weekDays.map((day) => (
-              <div
-                key={day.dateKey}
-                className={`${styles.dayCol} ${day.isToday ? styles.dayColToday : ''}`}
-              >
-                {day.matches.map((match) => (
-                  <WeekEventCard key={match.id} match={match} onClick={setSelectedMatch} />
-                ))}
-              </div>
-            ))}
+            {weekDays.map((day) => {
+              // Group matches by hour
+              const byHour = new Map<number, SportMatch[]>();
+              for (const match of day.matches) {
+                const hour = Math.floor(timeToMinutes(match.time) / 60);
+                const group = byHour.get(hour) ?? [];
+                group.push(match);
+                byHour.set(hour, group);
+              }
+
+              return (
+                <div
+                  key={day.dateKey}
+                  className={`${styles.dayCol} ${day.isToday ? styles.dayColToday : ''}`}
+                >
+                  {Array.from(byHour.entries()).map(([hour, matches]) =>
+                    matches.length > OVERFLOW_THRESHOLD ? (
+                      <OverflowPill
+                        key={hour}
+                        count={matches.length}
+                        topPx={hour * HOUR_HEIGHT}
+                        onClick={() =>
+                          setDayEventsSheet({
+                            label: `${matches.length} eventos deportivos`,
+                            matches,
+                          })
+                        }
+                      />
+                    ) : matches.length === 1 ? (
+                      <WeekEventCard key={matches[0].id} match={matches[0]} onClick={setSelectedMatch} />
+                    ) : (
+                      <div
+                        key={hour}
+                        className={styles.eventCardRow}
+                        style={{ top: `${(timeToMinutes(matches[0].time) / 60) * HOUR_HEIGHT}px` }}
+                      >
+                        {matches.map((match) => (
+                          <WeekEventCard key={match.id} match={match} onClick={setSelectedMatch} grouped />
+                        ))}
+                      </div>
+                    )
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Current time indicator */}
@@ -224,6 +302,47 @@ export default function WeeklyCalendarView({
           )}
         </div>
       </div>
+
+      {/* ── Bottom sheet: todos los eventos del día ────────────── */}
+      {dayEventsSheet && (
+        <>
+          <div
+            className={styles.sheetBackdrop}
+            onClick={() => setDayEventsSheet(null)}
+            aria-hidden="true"
+          />
+          <div
+            className={styles.sheet}
+            role="dialog"
+            aria-modal="true"
+            aria-label={dayEventsSheet.label}
+          >
+            <div className={styles.sheetHeader}>
+              <span className={styles.sheetTitle}>{dayEventsSheet.label}</span>
+              <button
+                type="button"
+                className={styles.sheetClose}
+                onClick={() => setDayEventsSheet(null)}
+                aria-label="Cerrar"
+              >
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <div className={styles.sheetList}>
+              {dayEventsSheet.matches.map((match) => (
+                <MatchCard
+                  key={match.id}
+                  match={match}
+                  isToday={match.date === todayKey}
+                  alwaysExpanded
+                />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* ── Match detail modal ──────────────────────────────── */}
       <Modal

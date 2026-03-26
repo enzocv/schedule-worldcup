@@ -336,6 +336,117 @@ const KNOCKOUT_MATCHES: SportMatch[] = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Partidos extra de demo – escenarios variados para la vista semanal.
+// ─────────────────────────────────────────────────────────────────────────────
+const DEMO_EXTRA_MATCHES: SportMatch[] = [
+
+  // ── Jun 9 (Mar) – 1 evento solo + 1 por definir ──────────────────────────
+  {
+    id: 'demo-001',
+    homeTeam: { id: 'por', name: 'Portugal', flagEmoji: '🇵🇹' },
+    awayTeam: { id: 'zam', name: 'Zambia',   flagEmoji: '🇿🇲' },
+    date: '2026-06-09',
+    time: '18:00',
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo B',
+    odds: {
+      homeWin: { label: 'Portugal', value: 1.25 },
+      draw:    { label: 'Empate',   value: 5.50 },
+      awayWin: { label: 'Zambia',   value: 9.00 },
+    },
+  },
+  {
+    id: 'demo-tdb-001a',
+    homeTeam: { id: 'aus', name: 'Australia', flagEmoji: '🇦🇺' },
+    awayTeam: { id: 'tur', name: 'Turquía',   flagEmoji: '🇹🇷' },
+    date: '2026-06-09',
+    time: '18:00',
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo B',
+    odds: {
+      homeWin: { label: 'Australia', value: 1.25 },
+      draw:    { label: 'Empate',   value: 5.50 },
+      awayWin: { label: 'Turquía',   value: 9.00 },
+    },
+  },
+  // TBD ese mismo día – aún no se conocen los equipos
+  {
+    id: 'demo-tbd-001',
+    homeTeam: { id: 'tbd-g1', name: 'Por definir' },
+    awayTeam: { id: 'tbd-g2', name: 'Por definir' },
+    date: '2026-06-09',
+    time: '21:00',
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo G',
+  },
+
+  // ── Jun 10 (Mié) – 2 eventos a la misma hora (14:00) + 1 TBD ───────────
+  {
+    id: 'demo-002',
+    homeTeam: { id: 'kor', name: 'Corea del Sur', flagEmoji: '🇰🇷' },
+    awayTeam: { id: 'gre', name: 'Grecia',        flagEmoji: '🇬🇷' },
+    date: '2026-06-10',
+    time: '14:00',
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo C',
+  },
+  {
+    id: 'demo-003',
+    homeTeam: { id: 'aus', name: 'Australia', flagEmoji: '🇦🇺' },
+    awayTeam: { id: 'tur', name: 'Turquía',   flagEmoji: '🇹🇷' },
+    date: '2026-06-10',
+    time: '14:40', // misma hora que Corea del Sur
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo D',
+  },
+  {
+    id: 'demo-tbd-002',
+    homeTeam: { id: 'tbd-g3', name: 'Por definir' },
+    awayTeam: { id: 'tbd-g4', name: 'Por definir' },
+    date: '2026-06-10',
+    time: '21:00',
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo H',
+  },
+
+  // ── Jun 11 (Jue) – ya tiene México (14:00), sumar 2 más = 3 total → pill
+  {
+    id: 'demo-004',
+    homeTeam: { id: 'swe', name: 'Suecia',  flagEmoji: '🇸🇪' },
+    awayTeam: { id: 'nga', name: 'Nigeria', flagEmoji: '🇳🇬' },
+    date: '2026-06-11',
+    time: '14:00', // misma hora que México
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo E',
+  },
+  {
+    id: 'demo-005',
+    homeTeam: { id: 'jpn', name: 'Japón',   flagEmoji: '🇯🇵' },
+    awayTeam: { id: 'cmr', name: 'Camerún', flagEmoji: '🇨🇲' },
+    date: '2026-06-11',
+    time: '17:00',
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo F',
+    odds: {
+      homeWin: { label: 'Japón',   value: 2.40 },
+      draw:    { label: 'Empate',  value: 3.10 },
+      awayWin: { label: 'Camerún', value: 2.90 },
+    },
+  },
+
+  // ── Jun 12 (Vie) – EE.UU. (20:00) + 1 a la misma hora = 2 total (ambas se muestran)
+  {
+    id: 'demo-006',
+    homeTeam: { id: 'mex2', name: 'México', flagEmoji: '🇲🇽' },
+    awayTeam: { id: 'chi',  name: 'Chile',  flagEmoji: '🇨🇱' },
+    date: '2026-06-12',
+    time: '20:00', // misma hora que EE.UU.
+    competition: 'Copa Mundial 2026',
+    phase: 'Grupo A',
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Export principal – mismo contrato que antes, sin cambios en los consumidores.
 // ─────────────────────────────────────────────────────────────────────────────
 export const WORLDCUP_2026_MATCHES: SportMatch[] = [
@@ -344,5 +455,6 @@ export const WORLDCUP_2026_MATCHES: SportMatch[] = [
     const override = MATCH_OVERRIDES[event._id];
     return override ? { ...base, ...override } : base;
   }),
+  ...DEMO_EXTRA_MATCHES,
   ...KNOCKOUT_MATCHES,
 ];
