@@ -1,4 +1,8 @@
-# Sistema de Diseño - Calendario de Eventos
+# Sistema de Diseño — Schedule World Cup 2026
+
+Todos los tokens están definidos en [`styles/tokens.css`](../../styles/tokens.css) como variables CSS y aplicados globalmente desde `app/globals.css`. Nunca se deben usar valores mágicos en los módulos CSS — siempre referenciar las variables de este sistema.
+
+---
 
 ## Paleta de Colores
 
@@ -216,3 +220,32 @@
 - Estados de hover: reducir opacidad 10%
 - Estados activos: aumentar saturación
 - Estados disabled: opacidad 50%
+
+---
+
+## Tokens específicos de la agenda deportiva
+
+Estos tokens NO están en `tokens.css` (son propios de los módulos CSS de la agenda), pero siguen las mismas convenciones de naming.
+
+### Badges de mercado (`MatchCard`)
+
+| Badge | Color | Cuándo se muestra |
+|---|---|---|
+| `PA` (Pago Anticipado) | Rojo `#EF4444` | Solo cuando el partido **no** está en vivo |
+| `BB` (BetBuilder) | Azul `#3B82F6` | Siempre |
+| `SC` (SuperCuota) | Verde `#10B981` | Siempre |
+
+La configuración de qué badges se muestran y bajo qué condiciones está centralizada en `components/schedule/MatchCard/MatchCard.constants.ts`. Para agregar un badge nuevo, solo se añade una entrada al array `MARKET_BADGES` y se crea el token CSS correspondiente en el módulo.
+
+### Colores del estado en vivo
+
+```css
+/* LiveBanner */
+--live-bg: darkred;          /* fondo del banner */
+--live-dot: #ff4444;         /* indicador pulsante */
+```
+
+### Icono centralizado
+
+Todos los SVG de la aplicación están en `components/ui/Icon/Icon.tsx`. Aceptan una prop `size` (número en px, default según el icono). Se consumen via el barrel export `@/components/ui/Icon`.
+
