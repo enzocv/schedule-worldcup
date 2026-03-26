@@ -8,6 +8,7 @@ export interface ModalProps {
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg';
   showCloseButton?: boolean;
+  noPadding?: boolean;
 }
 
 export default function Modal({
@@ -17,6 +18,7 @@ export default function Modal({
   children,
   size = 'md',
   showCloseButton = true,
+  noPadding = false,
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -94,7 +96,7 @@ export default function Modal({
             )}
           </div>
         )}
-        <div className={styles.content}>{children}</div>
+        <div className={noPadding ? styles.contentNoPadding : styles.content}>{children}</div>
       </div>
     </div>
   );

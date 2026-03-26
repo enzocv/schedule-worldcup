@@ -17,15 +17,17 @@ export interface MatchCardProps {
   isToday?: boolean;
   /** true → vista compacta para vistas de 3 días / semana */
   compact?: boolean;
+  /** true → siempre expandido, sin opción de colapsar */
+  alwaysExpanded?: boolean;
 }
 
 // ─── Componente ───────────────────────────────────────────────
 
-export default function MatchCard({ match, isToday = false, compact = false }: MatchCardProps) {
-  const [isExpanded, setIsExpanded] = useState(isToday || Boolean(match.isLive));
+export default function MatchCard({ match, isToday = false, compact = false, alwaysExpanded = false }: MatchCardProps) {
+  const [isExpanded, setIsExpanded] = useState(isToday || Boolean(match.isLive) || alwaysExpanded);
   const { toggleSelection, isSelected } = useBetting();
 
-  const isExpandable = true;
+  const isExpandable = !alwaysExpanded;
 
   const matchLabel = `${match.homeTeam.name} vs ${match.awayTeam.name}`;
 
@@ -57,16 +59,18 @@ export default function MatchCard({ match, isToday = false, compact = false }: M
   return (
     <article className={styles.card}>
       {match.isLive && match.liveStream && (
-        <div className={styles.liveBannerWrap}>
+        <div className={`${styles.liveBannerWrap}${alwaysExpanded ? ' liveBannerWrapModal' : ''}`}>
           <LiveBanner label={match.liveStream.label} />
         </div>
       )}
-      <button
+      <div
         className={`${styles.cardHeader} ${!isExpandable ? styles.cardHeaderStatic : ''}`}
+        role={isExpandable ? 'button' : undefined}
+        tabIndex={isExpandable ? 0 : undefined}
         onClick={() => isExpandable && setIsExpanded((prev) => !prev)}
+        onKeyDown={(e) => isExpandable && e.key === 'Enter' && setIsExpanded((prev) => !prev)}
         aria-expanded={isExpandable ? isExpanded : undefined}
         aria-controls={isExpandable ? `match-body-${match.id}` : undefined}
-        disabled={!isExpandable}
       >
         <div className={styles.cardMain}>
           <div className={styles.row1}>
@@ -82,7 +86,7 @@ export default function MatchCard({ match, isToday = false, compact = false }: M
             {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
           </span>
         )}
-      </button>
+      </div>
 
       {isExpanded && (
         <div id={`match-body-${match.id}`} className={styles.cardBody}>
