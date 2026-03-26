@@ -28,10 +28,19 @@
   } */
 }
 
+/* Ultrawide: evitar que el layout se estire demasiado */
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1440px;
+    box-shadow: var(--shadow-xl);
+  }
+}
+
 /* ─── Área de contenido ─── */
 
 .main {
   flex: 1;
+  overflow-x: auto;
   overflow-y: auto;
   /* Empujar por debajo del header sticky */
   scroll-behavior: smooth;
