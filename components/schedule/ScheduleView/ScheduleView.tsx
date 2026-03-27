@@ -24,6 +24,8 @@ function ScheduleViewInner({ matches, tournamentName, tournamentSubtitle }: Inne
   const [slipOpen, setSlipOpen] = useState(false);
   const { selections } = useBetting();
 
+  const x: number = "esto falla"; // error de TypeScript - test 2
+
   const {
     viewMode,
     setViewMode,
