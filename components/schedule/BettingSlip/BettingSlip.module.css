@@ -358,3 +358,12 @@
 .betBtn:active {
   background: var(--color-sport-primary-dark);
 }
+
+.successMsg {
+  text-align: center;
+  color: var(--color-sport-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-base);
+  padding: var(--spacing-3) 0;
+  margin: 0;
+}

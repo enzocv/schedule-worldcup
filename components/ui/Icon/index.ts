@@ -8,4 +8,8 @@ export {
   ChevronUpIcon,
   InfoIcon,
   CouponIcon,
+  AgendaIcon,
+  CalendarIcon,
+  CloseIcon,
+  TrashIcon,
 } from './Icon';

@@ -3,33 +3,35 @@
 import React, { useState } from 'react';
 import { useSchedule } from '@/lib/hooks/useSchedule';
 import { SportMatch } from '@/lib/types/schedule.types';
-import { BettingProvider, useBetting } from '@/lib/context/BettingContext';
+import { useBetting } from '@/lib/store/hooks';
+import { VIEW_STRATEGIES } from '@/lib/patterns/ViewStrategy';
 import AppBar from '../AppBar/AppBar';
 import ScheduleHeader from '../ScheduleHeader/ScheduleHeader';
 import MonthHeader from '../MonthHeader/MonthHeader';
-import DayGroup from '../DayGroup/DayGroup';
 import BettingSlip from '../BettingSlip/BettingSlip';
 import { CouponIcon } from '@/components/ui/Icon';
 import styles from './ScheduleView.module.css';
 
-// ─── Inner view (necesita acceso al contexto) ─────────────────
+// Props
 
-interface InnerProps {
+export interface ScheduleViewProps {
   matches?: SportMatch[];
   tournamentName?: string;
   tournamentSubtitle?: string;
 }
 
-function ScheduleViewInner({ matches, tournamentName, tournamentSubtitle }: InnerProps) {
+export default function ScheduleView({ matches, tournamentName, tournamentSubtitle }: ScheduleViewProps) {
   const [slipOpen, setSlipOpen] = useState(false);
   const { selections } = useBetting();
 
   const {
     viewMode,
     setViewMode,
+    currentDate,
     currentMonthName,
     daySchedules,
     goToToday,
+    todayKey,
   } = useSchedule({ matches });
 
   return (
@@ -49,17 +51,18 @@ function ScheduleViewInner({ matches, tournamentName, tournamentSubtitle }: Inne
       <main className={styles.main}>
         <MonthHeader monthName={currentMonthName} onToday={goToToday} />
 
-        <div className={styles.schedule} role="list" aria-label="Partidos por día">
-          {daySchedules.length === 0 ? (
-            <div className={styles.empty}>
-              <p>No hay eventos para este período.</p>
-            </div>
-          ) : (
-            daySchedules.map((day) => (
-              <DayGroup key={day.date} day={day} viewMode={viewMode} />
-            ))
-          )}
-        </div>
+        {daySchedules.length === 0 ? (
+          <div className={styles.empty}>
+            <p>No hay eventos para este período.</p>
+          </div>
+        ) : (
+          VIEW_STRATEGIES[viewMode].renderSchedule({
+            daySchedules,
+            currentDate,
+            todayKey,
+            listClassName: styles.schedule,
+          })
+        )}
       </main>
 
       {/* Botón flotante "Cupón" */}
@@ -84,20 +87,4 @@ function ScheduleViewInner({ matches, tournamentName, tournamentSubtitle }: Inne
   );
 }
 
-// ─── Props ────────────────────────────────────────────────────
 
-export interface ScheduleViewProps {
-  matches?: SportMatch[];
-  tournamentName?: string;
-  tournamentSubtitle?: string;
-}
-
-// ─── Componente público (envuelve con el proveedor) ───────────
-
-export default function ScheduleView(props: ScheduleViewProps) {
-  return (
-    <BettingProvider>
-      <ScheduleViewInner {...props} />
-    </BettingProvider>
-  );
-}

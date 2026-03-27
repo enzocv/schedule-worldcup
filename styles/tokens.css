@@ -125,6 +125,8 @@
   --color-sport-live-dot: #FF3B30;
   --color-sport-competition: #1D6FB5;
   --color-sport-today-bg: #E31837;
+  --color-selected-odd: #FB3333;
+  --color-seleted-odd-light: #F3F3F3;
 
   /* Schedule layout */
   --schedule-day-col-width: 52px;

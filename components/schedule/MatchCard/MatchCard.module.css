@@ -277,16 +277,16 @@
 }
 
 .oddCellSelected {
-  border-color: var(--color-sport-primary);
-  background: #fff1f3;
+  border-color: var(--color-selected-odd);
+  background: var(--color-selected-odd);
 }
 
 .oddCellSelected .oddValue {
-  color: var(--color-sport-primary);
+  color: var(--color-white);
 }
 
 .oddCellSelected .oddLabel {
-  color: var(--color-sport-primary);
+  color: var(--color-white);
 }
 
 .oddValue {
@@ -335,4 +335,39 @@
   height: 6px;
   border-radius: var(--radius-full);
   background: var(--color-gray-300);
+}
+
+.headerWrapModalEvent {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-2);
+  margin: var(--spacing-2) 0;
+}
+
+.headerWrapModalEvent .liveBannerWrap {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.closeBtnHeader {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--color-gray-100);
+  color: var(--color-gray-500);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  padding: 0;
+}
+
+.closeBtnHeader:hover {
+  background: var(--color-gray-200);
+  color: var(--color-gray-900);
 }

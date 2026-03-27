@@ -1,0 +1,68 @@
+# ─── Workflow reutilizable: Unit Tests ────────────────────────
+#
+# No se dispara directamente. Se invoca desde otros workflows
+# usando `uses: ./.github/workflows/unit-tests.yml`.
+#
+# Ejemplo de uso:
+#   jobs:
+#     tests:
+#       uses: ./.github/workflows/unit-tests.yml
+#       with:
+#         node-version: '22'  # opcional, default: 22
+
+name: Unit Tests
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: "Versión de Node.js a usar"
+        type: string
+        required: false
+        default: "22"
+    outputs:
+      result:
+        description: "Resultado de los tests (success | failure)"
+        value: ${{ jobs.test.outputs.result }}
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    outputs:
+      result: ${{ steps.set-result.outputs.result }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage -- --ci --coverageReporters=text-summary
+
+      - name: Set result output
+        id: set-result
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "result=success" >> $GITHUB_OUTPUT
+          else
+            echo "result=failure" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
