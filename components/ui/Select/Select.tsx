@@ -1,4 +1,4 @@
-import React, { SelectHTMLAttributes, forwardRef } from 'react';
+import React, { SelectHTMLAttributes, forwardRef, useId } from 'react';
 import styles from './Select.module.css';
 
 export interface SelectOption {
@@ -28,7 +28,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
     },
     ref
   ) => {
-    const inputId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
 
     return (
       <div className={`${styles.container} ${fullWidth ? styles.fullWidth : ''}`}>

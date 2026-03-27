@@ -7,17 +7,24 @@ export interface LiveBannerProps {
 }
 
 export default function LiveBanner({ label, onClick }: LiveBannerProps) {
-  const Tag = onClick ? 'button' : 'div';
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        className={styles.banner}
+        onClick={onClick}
+        aria-label={`Transmisión en vivo: ${label}`}
+      >
+        <span className={styles.dot} aria-hidden="true" />
+        <span className={styles.label}>{label}</span>
+      </button>
+    );
+  }
+
   return (
-    <Tag
-      className={styles.banner}
-      onClick={onClick}
-      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-      {...(onClick ? ({ type: 'button' } as any) : {})}
-      aria-label={onClick ? `Transmisión en vivo: ${label}` : undefined}
-    >
+    <div className={styles.banner}>
       <span className={styles.dot} aria-hidden="true" />
       <span className={styles.label}>{label}</span>
-    </Tag>
+    </div>
   );
 }
