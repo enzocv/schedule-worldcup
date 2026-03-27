@@ -80,6 +80,10 @@
   padding: var(--spacing-6);
 }
 
+.contentNoPadding {
+  padding: 0;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

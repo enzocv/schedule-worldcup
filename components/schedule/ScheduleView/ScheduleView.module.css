@@ -28,10 +28,19 @@
   } */
 }
 
+/* Ultrawide: evitar que el layout se estire demasiado */
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1440px;
+    box-shadow: var(--shadow-xl);
+  }
+}
+
 /* ─── Área de contenido ─── */
 
 .main {
   flex: 1;
+  overflow-x: auto;
   overflow-y: auto;
   /* Empujar por debajo del header sticky */
   scroll-behavior: smooth;
@@ -61,10 +70,10 @@
 .couponBtn {
   position: fixed;
   bottom: var(--spacing-6);
-  right: var(--spacing-4);
+  right: var(--spacing-8);
   background: var(--color-white);
   border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-full);
   box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
@@ -111,14 +120,14 @@
 }
 
 /* En pantallas grandes, anclar al contenedor */
-@media (min-width: 640px) {
+/* @media (min-width: 640px) {
   .couponBtn {
     right: calc(50% - 270px + var(--spacing-4));
   }
-}
+} */
 
-@media (min-width: 1024px) {
+/* @media (min-width: 1024px) {
   .couponBtn {
     right: calc(50% - 240px + var(--spacing-4));
   }
-}
+} */

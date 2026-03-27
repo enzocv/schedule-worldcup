@@ -8,6 +8,7 @@ import AppBar from '../AppBar/AppBar';
 import ScheduleHeader from '../ScheduleHeader/ScheduleHeader';
 import MonthHeader from '../MonthHeader/MonthHeader';
 import DayGroup from '../DayGroup/DayGroup';
+import WeeklyCalendarView from '../WeeklyCalendarView';
 import BettingSlip from '../BettingSlip/BettingSlip';
 import { CouponIcon } from '@/components/ui/Icon';
 import styles from './ScheduleView.module.css';
@@ -24,12 +25,16 @@ function ScheduleViewInner({ matches, tournamentName, tournamentSubtitle }: Inne
   const [slipOpen, setSlipOpen] = useState(false);
   const { selections } = useBetting();
 
+  console.log('ScheduleView render matches: ', matches);
+
   const {
     viewMode,
     setViewMode,
+    currentDate,
     currentMonthName,
     daySchedules,
     goToToday,
+    todayKey,
   } = useSchedule({ matches });
 
   return (
@@ -49,17 +54,25 @@ function ScheduleViewInner({ matches, tournamentName, tournamentSubtitle }: Inne
       <main className={styles.main}>
         <MonthHeader monthName={currentMonthName} onToday={goToToday} />
 
-        <div className={styles.schedule} role="list" aria-label="Partidos por día">
-          {daySchedules.length === 0 ? (
-            <div className={styles.empty}>
-              <p>No hay eventos para este período.</p>
-            </div>
-          ) : (
-            daySchedules.map((day) => (
-              <DayGroup key={day.date} day={day} viewMode={viewMode} />
-            ))
-          )}
-        </div>
+        {viewMode === 'week' ? (
+          <WeeklyCalendarView
+            daySchedules={daySchedules}
+            currentDate={currentDate}
+            todayKey={todayKey}
+          />
+        ) : (
+          <div className={styles.schedule} role="list" aria-label="Partidos por día">
+            {daySchedules.length === 0 ? (
+              <div className={styles.empty}>
+                <p>No hay eventos para este período.</p>
+              </div>
+            ) : (
+              daySchedules.map((day) => (
+                <DayGroup key={day.date} day={day} viewMode={viewMode} />
+              ))
+            )}
+          </div>
+        )}
       </main>
 
       {/* Botón flotante "Cupón" */}
