@@ -1,43 +1,59 @@
 # Flujo de datos
 
-Este documento describe cómo los datos fluyen desde su origen (endpoint o mocks) hasta los componentes de UI.
+Este documento describe cómo los datos fluyen desde su origen (mocks / endpoint) hasta los componentes de UI.
 
 ---
 
 ## Diagrama general
 
 ```
-Endpoint API (sportsbook)
+lib/data/worldcup2026.ts
+(RAW_EVENTS + KNOCKOUT_MATCHES)
+        │
+        │  adaptApiEvent()  ←── PHASE_MAP, teamFlags.ts
+        │  schedule.adapter.ts
+        ▼
+  WORLDCUP_2026_MATCHES: SportMatch[]
         │
         ▼
-  ApiEvent[]  ──────────────────────────────────────────┐
-        │                                               │
-  adaptApiEvent()  ←── PHASE_MAP                       │
-  schedule.adapter.ts   ←── teamFlags.ts               │
-        │                                               │
-        ▼                                               │
-  SportMatch[]                                   MATCH_OVERRIDES
-        │                                               │
-        └───────────────────────────────────────────────┘
-                        │
-                        ▼
-              WORLDCUP_2026_MATCHES
-              lib/data/worldcup2026.ts
-                        │
-                        ▼
-                  useSchedule()
-              lib/hooks/useSchedule.ts
-                        │
-                 ┌──────┴──────┐
-                 ▼             ▼
-           DaySchedule[]    MatchPhase[]
-           (grouped)        (filters)
+  StaticMatchRepository          ← IMatchRepository (contrato)
+  lib/patterns/MatchRepository.ts
+        │
+        ├─ .getAll()
+        ├─ .getByDate()
+        ├─ .getLive()
+        └─ .toDaySchedules(todayKey)
                  │
                  ▼
-           ScheduleView
+           useSchedule()
+       lib/hooks/useSchedule.ts
                  │
-                 ▼
-     DayGroup → MatchCard (UI final)
+          ┌──────┴──────────┐
+          ▼                 ▼
+    DaySchedule[]      MatchPhase[]
+    (agrupados)        (filtros)
+          │
+          ▼
+    VIEW_STRATEGIES[viewMode]       ← Strategy Pattern
+    lib/patterns/ViewStrategy.tsx
+          │
+          ▼
+    DayGroup / WeeklyCalendarView
+          │
+          ▼
+    MatchCardFactory.create(variant, opts)   ← Factory Pattern
+    lib/patterns/MatchCardFactory.tsx
+          │
+          ▼
+      MatchCard (UI final)
+          │
+          │  toggleSelection(matchId, market, odds)
+          ▼
+    Redux Store (bettingSlice)       ← useBetting() hook
+    lib/store/slices/bettingSlice.ts
+          │
+          ▼
+      BettingSlip
 ```
 
 ---
@@ -45,7 +61,7 @@ Endpoint API (sportsbook)
 ## 1. Tipos de datos
 
 ### `ApiEvent` (`lib/types/api.types.ts`)
-Shape exacto que devuelve el endpoint del sportsbook:
+Shape que devuelve el endpoint del sportsbook:
 
 ```ts
 interface ApiEvent {
@@ -74,8 +90,8 @@ interface SportMatch {
   id: string;
   homeTeam: Team;
   awayTeam: Team;
-  date: string;       // "YYYY-MM-DD" en zona horaria display
-  time: string;       // "HH:MM" en zona horaria display
+  date: string;       // "YYYY-MM-DD"
+  time: string;       // "HH:MM"
   phase: MatchPhase;
   group?: string;
   venue?: string;
@@ -101,81 +117,75 @@ Convierte un `ApiEvent` en `SportMatch`:
 4. **Mapeo de campos** — `IsLive → isLive`, `Metadata.Venue → venue`, etc.
 
 ```ts
-// Ejemplo completo
 const match = adaptApiEvent(
   { _id: "abc", EventName: "Mexico vs USA", StartEventDate: "2026-06-12T20:00:00Z", ... },
   "GROUP_STAGE"
 );
-// → { id: "abc", homeTeam: { name: "Mexico", flag: "🇲🇽" }, ... date: "2026-06-12", time: "15:00" }
+// → { id: "abc", homeTeam: { name: "Mexico", flag: "🇲🇽" }, date: "2026-06-12", time: "15:00", ... }
 ```
-
-### `utcToCdt(utcIso)`
-
-```ts
-utcToCdt("2026-06-12T20:00:00Z") // → { date: "2026-06-12", time: "15:00" }
-```
-
-Aplica offset `-5h`. Si el resultado cruza la medianoche, la fecha se ajusta correctamente.
 
 ---
 
 ## 3. Dataset final (`worldcup2026.ts`)
 
-El archivo combina tres fuentes:
-
 ```ts
-// 1. Eventos de API transformados
 const adapted = RAW_EVENTS.map((e) => {
   const base = adaptApiEvent(e, PHASE_MAP[e._id] ?? 'GROUP_STAGE');
   return { ...base, ...MATCH_OVERRIDES[e._id] };
 });
 
-// 2. Partidos de fase eliminatoria (manuales, "Por definir")
-const knockout = KNOCKOUT_MATCHES;
-
-// 3. Exportación final
-export const WORLDCUP_2026_MATCHES: SportMatch[] = [...adapted, ...knockout];
+export const WORLDCUP_2026_MATCHES: SportMatch[] = [...adapted, ...KNOCKOUT_MATCHES];
 ```
 
-| Fuente | Qué contiene |
+| Fuente | Contenido |
 |---|---|
-| `RAW_EVENTS` | 19 eventos de la jornada de grupos del sportsbook |
-| `PHASE_MAP` | Mapeo `_id → MatchPhase` para todos los eventos |
-| `MATCH_OVERRIDES` | Datos de demo: isLive, liveStream, odds (solo México) |
+| `RAW_EVENTS` | Eventos de grupos del sportsbook |
+| `PHASE_MAP` | Mapeo `_id → MatchPhase` |
+| `MATCH_OVERRIDES` | Datos de demo: `isLive`, `liveStream`, `odds` (México) |
 | `KNOCKOUT_MATCHES` | Octavos, cuartos, semi y final con "Por definir" |
 
 ---
 
-## 4. Hook `useSchedule`
+## 4. Repository Pattern (`MatchRepository.ts`)
+
+`StaticMatchRepository` implementa `IMatchRepository`. Recibe el array de `SportMatch[]` en el constructor (por defecto `WORLDCUP_2026_MATCHES`).
+
+Para cambiar la fuente de datos, crear una clase `ApiMatchRepository` que implemente la misma interfaz sin tocar los consumidores.
+
+Ver [Patrones de diseño](../patterns/README.md).
+
+---
+
+## 5. Hook `useSchedule`
 
 **Archivo:** `lib/hooks/useSchedule.ts`
 
-Aplica filtros y agrupa los partidos para consumo del componente:
-
 ```ts
 const {
-  groupedByDay,    // DaySchedule[] — días con sus partidos
-  phases,          // MatchPhase[] únicas presentes
-  viewMode,        // 'schedule' | 'grid' | 'scores'
+  groupedByDay,    // DaySchedule[]
+  phases,          // MatchPhase[] únicas
+  viewMode,        // ScheduleViewMode
   phaseFilter,     // MatchPhase | 'all'
   setViewMode,
   setPhaseFilter,
+  currentDate,
+  todayKey,
 } = useSchedule(WORLDCUP_2026_MATCHES);
 ```
 
 **Flujo interno:**
-1. Filtra por `phaseFilter` si no es `'all'`
-2. Ordena por fecha y hora
-3. Agrupa en `DaySchedule[]` por `date`
-4. Memoiza con `useMemo`
+1. Crea un `StaticMatchRepository` con los partidos recibidos.
+2. Selecciona la `ViewStrategy` activa desde `VIEW_STRATEGIES[viewMode]`.
+3. Filtra por `phaseFilter`, ordena y agrupa en `DaySchedule[]` vía `.toDaySchedules()`.
+4. Memoiza con `useMemo`.
 
 ---
 
-## 5. Estado compartido: `BettingContext`
+## 6. Estado compartido: Redux Store
 
-**Archivo:** `lib/context/BettingContext.tsx`
+**Archivos:** `lib/store/slices/bettingSlice.ts`, `lib/store/slices/eventsSlice.ts`
 
-Gestiona el cupón de apuestas. Propagado globalmente desde `app/layout.tsx`.
+El estado global del cupón de apuestas vive en Redux. `StoreProvider` hidrata desde `localStorage` y persiste cambios automáticamente.
 
 ```ts
 const {
@@ -183,18 +193,16 @@ const {
   toggleSelection,   // (matchId, market, odds) => void
   removeSelection,   // (matchId) => void
   clearSelections,   // () => void
-  totalOdds,         // number (product de todos los odds)
+  totalOdds,         // número (producto de todos los odds)
   isSelected,        // (matchId: string) => boolean
-} = useBettingContext();
+} = useBetting();
 ```
-
-**No persiste** entre recargas (estado en memoria). Para persistencia, agregar `localStorage` en el reducer.
 
 ---
 
-## 6. Integración con endpoint real
+## 7. Integración con endpoint real
 
-Para reemplazar los mocks por datos reales del endpoint:
+Para reemplazar los mocks por datos reales:
 
 ```ts
 // app/schedule/page.tsx (Server Component)
@@ -207,4 +215,5 @@ const { Events }: { Events: ApiEvent[] } = await res.json();
 const matches = Events.map((e) => adaptApiEvent(e, 'GROUP_STAGE'));
 ```
 
-El adaptador ya maneja todos los casos edge (equipos desconocidos, fechas UTC, campos opcionales).
+O bien implementar `ApiMatchRepository` que llame al endpoint en `getAll()` y pasarlo a `useSchedule()`.
+
