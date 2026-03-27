@@ -12,7 +12,7 @@ export interface TeamInfo {
 }
 
 export const TEAM_FLAG_MAP: Record<string, TeamInfo> = {
-  // ── América del Norte / CONCACAF ─────────────────────────
+  // América del Norte / CONCACAF
   'México':             { id: 'mex', flagEmoji: '🇲🇽' },
   'Canadá':             { id: 'can', flagEmoji: '🇨🇦' },
   'EE.UU.':             { id: 'usa', flagEmoji: '🇺🇸' },
@@ -24,7 +24,7 @@ export const TEAM_FLAG_MAP: Record<string, TeamInfo> = {
   'Haití':              { id: 'hai', flagEmoji: '🇭🇹' },
   'Curazao':            { id: 'cuw', flagEmoji: '🇨🇼' },
 
-  // ── América del Sur / CONMEBOL ────────────────────────────
+  // América del Sur / CONMEBOL
   'Brasil':             { id: 'bra', flagEmoji: '🇧🇷' },
   'Argentina':          { id: 'arg', flagEmoji: '🇦🇷' },
   'Uruguay':            { id: 'uru', flagEmoji: '🇺🇾' },
@@ -36,7 +36,7 @@ export const TEAM_FLAG_MAP: Record<string, TeamInfo> = {
   'Bolivia':            { id: 'bol', flagEmoji: '🇧🇴' },
   'Venezuela':          { id: 'ven', flagEmoji: '🇻🇪' },
 
-  // ── Europa / UEFA ─────────────────────────────────────────
+  // Europa / UEFA
   'España':             { id: 'esp', flagEmoji: '🇪🇸' },
   'Francia':            { id: 'fra', flagEmoji: '🇫🇷' },
   'Alemania':           { id: 'ger', flagEmoji: '🇩🇪' },
@@ -64,7 +64,7 @@ export const TEAM_FLAG_MAP: Record<string, TeamInfo> = {
   'Albania':            { id: 'alb', flagEmoji: '🇦🇱' },
   'Georgia':            { id: 'geo', flagEmoji: '🇬🇪' },
 
-  // ── África / CAF ─────────────────────────────────────────
+  // África / CAF
   'Marruecos':          { id: 'mar', flagEmoji: '🇲🇦' },
   'Senegal':            { id: 'sen', flagEmoji: '🇸🇳' },
   'Nigeria':            { id: 'nga', flagEmoji: '🇳🇬' },
@@ -80,7 +80,7 @@ export const TEAM_FLAG_MAP: Record<string, TeamInfo> = {
   'Tanzania':           { id: 'tan', flagEmoji: '🇹🇿' },
   'Angola':             { id: 'ang', flagEmoji: '🇦🇴' },
 
-  // ── Asia / AFC ────────────────────────────────────────────
+  // Asia / AFC
   'Japón':              { id: 'jpn', flagEmoji: '🇯🇵' },
   'República de Corea': { id: 'kor', flagEmoji: '🇰🇷' },
   'Arabia Saudita':     { id: 'ksa', flagEmoji: '🇸🇦' },
@@ -93,6 +93,6 @@ export const TEAM_FLAG_MAP: Record<string, TeamInfo> = {
   'China':              { id: 'chn', flagEmoji: '🇨🇳' },
   'Tailandia':          { id: 'tha', flagEmoji: '🇹🇭' },
 
-  // ── Oceanía / OFC ────────────────────────────────────────
+  // Oceanía / OFC
   'Nueva Zelanda':      { id: 'nzl', flagEmoji: '🇳🇿' },
 };

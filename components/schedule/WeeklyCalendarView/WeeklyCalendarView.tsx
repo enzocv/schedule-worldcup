@@ -18,7 +18,7 @@ import {
 } from './WeeklyCalendarView.utils';
 import styles from './WeeklyCalendarView.module.css';
 
-// ─── Types ────────────────────────────────────────────────────
+// Tipos
 
 interface WeekDay {
   dateKey: string;
@@ -28,7 +28,7 @@ interface WeekDay {
   matches: SportMatch[];
 }
 
-// ─── Props ────────────────────────────────────────────────────
+// Props
 
 export interface WeeklyCalendarViewProps {
   daySchedules: DaySchedule[];
@@ -36,7 +36,7 @@ export interface WeeklyCalendarViewProps {
   todayKey: string;
 }
 
-// ─── Main component ───────────────────────────────────────────
+// Componente principal
 
 export default function WeeklyCalendarView({
   daySchedules,

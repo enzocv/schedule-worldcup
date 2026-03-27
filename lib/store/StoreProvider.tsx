@@ -9,7 +9,7 @@ import type { AppDispatch } from './store';
 
 const STORAGE_KEY = 'calendario_events';
 
-// Hydrates events from localStorage on first mount
+// Hidrata los eventos desde localStorage al montar
 function EventsHydrator() {
   const dispatch = useDispatch<AppDispatch>();
   const hydrated = useRef(false);
@@ -21,14 +21,14 @@ function EventsHydrator() {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) dispatch(eventsActions.setEvents(JSON.parse(stored)));
     } catch {
-      // ignore malformed data
+      // ignorar datos corruptos
     }
   }, [dispatch]);
 
   return null;
 }
 
-// Persists events to localStorage whenever the slice changes
+// Persiste los eventos en localStorage cada vez que cambia el slice
 function EventsPersistor() {
   const events = useAppSelector((s) => s.events.events);
 

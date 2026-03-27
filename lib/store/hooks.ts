@@ -7,13 +7,13 @@ import { bettingActions, BetSelection } from './slices/bettingSlice';
 import { eventsActions } from './slices/eventsSlice';
 import { CalendarEvent } from '@/lib/types/event.types';
 
-// ─── Base RTK hooks ──────────────────────────────────────────
+// Hooks base de RTK
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector = <T>(selector: (state: RootState) => T): T =>
   useSelector(selector);
 
-// ─── useBetting ──────────────────────────────────────────────
+// useBetting
 
 export function useBetting() {
   const dispatch = useAppDispatch();
@@ -35,7 +35,7 @@ export function useBetting() {
   };
 }
 
-// ─── useEvents ───────────────────────────────────────────────
+// useEvents
 
 export function useEvents() {
   const dispatch = useAppDispatch();
@@ -50,6 +50,6 @@ export function useEvents() {
   };
 }
 
-// ─── Re-export BetSelection type for consumers ───────────────
+// Re-exportar BetSelection para consumidores externos
 
 export type { BetSelection };

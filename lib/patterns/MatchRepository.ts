@@ -2,11 +2,9 @@ import { SportMatch, MatchPhase, DaySchedule } from '../types/schedule.types';
 import { WORLDCUP_2026_MATCHES } from '../data/worldcup2026';
 import { DAY_LABELS_ES, MONTH_NAMES_ES } from '../utils/locale';
 
-// ─── Interface ────────────────────────────────────────────────
-//
-// Defines the contract for any match data source.
-// New data sources (REST API, GraphQL, mock) only need
-// to implement this interface — consumers never change.
+// Contrato para cualquier fuente de datos de partidos.
+// Nuevas fuentes (API REST, GraphQL, mock) solo tienen que implementar esta interfaz;
+// los consumidores no necesitan cambiar.
 
 export interface IMatchRepository {
   getAll(): SportMatch[];
@@ -14,14 +12,12 @@ export interface IMatchRepository {
   getByPhase(phase: MatchPhase): SportMatch[];
   getLive(): SportMatch[];
   getUpcoming(fromDate: string): SportMatch[];
-  /** Groups all matches into DaySchedule objects for rendering. */
+  /** Agrupa todos los partidos en objetos DaySchedule para renderizar. */
   toDaySchedules(todayKey: string): DaySchedule[];
 }
 
-// ─── Concrete implementation ──────────────────────────────────
-//
-// StaticMatchRepository works with an in-memory array of SportMatch.
-// Swap this class for an ApiMatchRepository when a real endpoint is available.
+// Implementación concreta con array en memoria.
+// Reemplazar por ApiMatchRepository cuando haya un endpoint real.
 
 export class StaticMatchRepository implements IMatchRepository {
   constructor(private readonly matches: SportMatch[] = WORLDCUP_2026_MATCHES) {}
@@ -68,5 +64,5 @@ export class StaticMatchRepository implements IMatchRepository {
   }
 }
 
-// ─── Singleton for the World Cup dataset ─────────────────────
+// Singleton del dataset del Mundial
 export const worldCupRepository = new StaticMatchRepository();

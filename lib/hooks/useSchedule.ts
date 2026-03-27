@@ -42,19 +42,19 @@ export function useSchedule({
     return new Date();
   });
 
-  // ── Derived: month label ──────────────────────────────────
+  // Nombre del mes actual
   const currentMonthName = useMemo(
     () => MONTH_NAMES_ES[currentDate.getMonth()],
     [currentDate],
   );
 
-  // ── Derived: all days grouped ─────────────────────────────
+  // Todos los días agrupados
   const allDaySchedules = useMemo(
     () => repo.toDaySchedules(todayKey),
     [repo, todayKey],
   );
 
-  // ── Derived: visible days for current view/date ───────────
+  // Días visibles según la vista y fecha actual
   const daySchedules = useMemo((): DaySchedule[] => {
     if (viewMode === 'agenda') return allDaySchedules;
 
@@ -79,7 +79,7 @@ export function useSchedule({
     );
   }, [allDaySchedules, viewMode, currentDate]);
 
-  // ── Computed visible month (first day's month if available) ─
+  // Mes visible (toma el mes del primer día si hay)
   const visibleMonthName = useMemo(() => {
     if (daySchedules.length > 0) {
       const first = new Date(daySchedules[0].date + 'T00:00:00');
@@ -88,7 +88,7 @@ export function useSchedule({
     return currentMonthName;
   }, [daySchedules, currentMonthName]);
 
-  // ── Navigation ────────────────────────────────────────────
+  // Navegación
   const goToToday = useCallback(() => setCurrentDate(new Date()), []);
 
   const goToPrevious = useCallback(() => {

@@ -5,7 +5,7 @@ import BettingSlip from '@/components/schedule/BettingSlip/BettingSlip';
 import { renderWithStore } from '../utils/renderWithStore';
 import { selectionMexico, selectionSuecia } from '../fixtures/matches';
 
-// ─── Cerrado ──────────────────────────────────────────────────
+// Cerrado
 
 describe('BettingSlip — cerrado', () => {
   it('no renderiza nada cuando isOpen=false', () => {
@@ -16,7 +16,7 @@ describe('BettingSlip — cerrado', () => {
   });
 });
 
-// ─── Abierto y vacío ──────────────────────────────────────────
+// Abierto y vacío
 
 describe('BettingSlip — abierto y vacío', () => {
   it('muestra el diálogo con rol correcto', () => {
@@ -40,7 +40,7 @@ describe('BettingSlip — abierto y vacío', () => {
   });
 });
 
-// ─── Abierto con selecciones ──────────────────────────────────
+// Abierto con selecciones
 
 describe('BettingSlip — abierto con selecciones', () => {
   it('muestra el partido de la selección', () => {
@@ -86,7 +86,7 @@ describe('BettingSlip — abierto con selecciones', () => {
   });
 });
 
-// ─── Campo de monto y ganancia potencial ─────────────────────
+// Campo de monto y ganancia potencial
 
 describe('BettingSlip — monto y ganancia potencial', () => {
   it('la ganancia potencial muestra "—" cuando el monto está vacío', () => {
@@ -109,7 +109,7 @@ describe('BettingSlip — monto y ganancia potencial', () => {
   });
 });
 
-// ─── Cierre del panel ─────────────────────────────────────────
+// Cierre del panel
 
 describe('BettingSlip — cerrar panel', () => {
   it('llama a onClose al presionar la tecla Escape', async () => {
@@ -139,7 +139,7 @@ describe('BettingSlip — cerrar panel', () => {
   });
 });
 
-// ─── Gestión de selecciones ───────────────────────────────────
+// Gestión de selecciones
 
 describe('BettingSlip — gestión de selecciones', () => {
   it('"Borrar todo" elimina todas las selecciones de la vista', async () => {
@@ -165,7 +165,7 @@ describe('BettingSlip — gestión de selecciones', () => {
   });
 });
 
-// ─── Flujo de apuesta ─────────────────────────────────────────
+// Flujo de apuesta
 
 describe('BettingSlip — flujo de apuesta', () => {
   beforeEach(() => {

@@ -6,8 +6,7 @@ import { bettingSlice } from '@/lib/store/slices/bettingSlice';
 import { eventsSlice } from '@/lib/store/slices/eventsSlice';
 import type { BetSelection } from '@/lib/store/slices/bettingSlice';
 
-// ─── Fresh store factory ──────────────────────────────────────
-// Always creates a new isolated store so tests never share state.
+// Store aislado por test — cada render crea uno nuevo para no compartir estado.
 
 export function makeTestStore(preloadedSelections: BetSelection[] = []) {
   return configureStore({
@@ -21,7 +20,7 @@ export function makeTestStore(preloadedSelections: BetSelection[] = []) {
   });
 }
 
-// ─── Custom render ────────────────────────────────────────────
+// Render personalizado con Provider de Redux
 
 interface RenderWithStoreOptions extends Omit<RenderOptions, 'wrapper'> {
   preloadedSelections?: BetSelection[];

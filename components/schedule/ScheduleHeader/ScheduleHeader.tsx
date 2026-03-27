@@ -5,7 +5,7 @@ import { ScheduleViewMode } from '@/lib/types/schedule.types';
 import { AgendaIcon, GridIcon, CalendarIcon } from '@/components/ui/Icon';
 import styles from './ScheduleHeader.module.css';
 
-// ─── Configuración de pestañas ────────────────────────────────
+// Configuración de pestañas
 
 interface Tab {
   mode: ScheduleViewMode;
@@ -19,7 +19,7 @@ const TABS: Tab[] = [
   { mode: 'week', label: 'Semana', Icon: CalendarIcon },
 ];
 
-// ─── Props ────────────────────────────────────────────────────
+// Props
 
 export interface ScheduleHeaderProps {
   viewMode: ScheduleViewMode;
@@ -28,7 +28,7 @@ export interface ScheduleHeaderProps {
   tournamentSubtitle?: string;
 }
 
-// ─── Componente ───────────────────────────────────────────────
+// Componente
 
 export default function ScheduleHeader({
   viewMode,
