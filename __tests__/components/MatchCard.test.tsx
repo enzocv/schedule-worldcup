@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import MatchCard from '@/components/schedule/MatchCard/MatchCard';
 import { renderWithStore } from '../utils/renderWithStore';
