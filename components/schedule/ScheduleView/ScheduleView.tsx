@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useSchedule } from '@/lib/hooks/useSchedule';
 import { SportMatch } from '@/lib/types/schedule.types';
-import { BettingProvider, useBetting } from '@/lib/context/BettingContext';
+import { useBetting } from '@/lib/context/BettingContext';
 import AppBar from '../AppBar/AppBar';
 import ScheduleHeader from '../ScheduleHeader/ScheduleHeader';
 import MonthHeader from '../MonthHeader/MonthHeader';
@@ -13,19 +13,17 @@ import BettingSlip from '../BettingSlip/BettingSlip';
 import { CouponIcon } from '@/components/ui/Icon';
 import styles from './ScheduleView.module.css';
 
-// ─── Inner view (necesita acceso al contexto) ─────────────────
+// ─── Props ─────────────────────────────────────────────
 
-interface InnerProps {
+export interface ScheduleViewProps {
   matches?: SportMatch[];
   tournamentName?: string;
   tournamentSubtitle?: string;
 }
 
-function ScheduleViewInner({ matches, tournamentName, tournamentSubtitle }: InnerProps) {
+export default function ScheduleView({ matches, tournamentName, tournamentSubtitle }: ScheduleViewProps) {
   const [slipOpen, setSlipOpen] = useState(false);
   const { selections } = useBetting();
-
-  console.log('ScheduleView render matches: ', matches);
 
   const {
     viewMode,
@@ -97,20 +95,4 @@ function ScheduleViewInner({ matches, tournamentName, tournamentSubtitle }: Inne
   );
 }
 
-// ─── Props ────────────────────────────────────────────────────
 
-export interface ScheduleViewProps {
-  matches?: SportMatch[];
-  tournamentName?: string;
-  tournamentSubtitle?: string;
-}
-
-// ─── Componente público (envuelve con el proveedor) ───────────
-
-export default function ScheduleView(props: ScheduleViewProps) {
-  return (
-    <BettingProvider>
-      <ScheduleViewInner {...props} />
-    </BettingProvider>
-  );
-}

@@ -68,7 +68,6 @@ Sin librerías de UI externas ni gestores de estado globales — solo React cont
 │   │
 │   ├── hooks/
 │   │   ├── useSchedule.ts    # Lógica de vistas, filtros y agrupación por día
-│   │   └── useCalendar.ts
 │   │
 │   └── context/
 │       ├── BettingContext.tsx  # Estado global del cupón de apuestas
