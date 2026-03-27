@@ -119,7 +119,7 @@
   --breakpoint-2xl: 1536px;
 
   /* ─── Sport & Schedule Theme ─────────────────────────────── */
-  --color-sport-primary: #E31837;
+  --color-sport-primary: #+E31837;
   --color-sport-primary-hover: #C41530;
   --color-sport-primary-dark: #5A0001;
   --color-sport-live-dot: #FF3B30;
