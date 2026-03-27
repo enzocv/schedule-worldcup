@@ -277,16 +277,16 @@
 }
 
 .oddCellSelected {
-  border-color: var(--color-sport-primary);
-  background: #fff1f3;
+  border-color: var(--color-selected-odd);
+  background: var(--color-selected-odd);
 }
 
 .oddCellSelected .oddValue {
-  color: var(--color-sport-primary);
+  color: var(--color-white);
 }
 
 .oddCellSelected .oddLabel {
-  color: var(--color-sport-primary);
+  color: var(--color-white);
 }
 
 .oddValue {

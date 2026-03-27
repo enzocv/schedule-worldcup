@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useBetting } from '@/lib/context/BettingContext';
+import { useBetting } from '@/lib/store/hooks';
 import styles from './BettingSlip.module.css';
 
 // ─── Icons ────────────────────────────────────────────────────

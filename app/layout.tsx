@@ -1,6 +1,6 @@
 import '@/styles/tokens.css';
 import './globals.css';
-import { EventsProvider } from '@/lib/context/EventsContext';
+import StoreProvider from '@/lib/store/StoreProvider';
 
 export const metadata = {
   title: 'Calendario de Eventos',
@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
-        <EventsProvider>{children}</EventsProvider>
+        <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
   );
