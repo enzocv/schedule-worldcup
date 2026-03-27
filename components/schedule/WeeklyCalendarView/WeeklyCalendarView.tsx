@@ -354,20 +354,11 @@ export default function WeeklyCalendarView({
       >
         {selectedMatch && (
           <div className={styles.modalMatchWrap}>
-            <button
-              type="button"
-              className={styles.modalClose}
-              onClick={() => setSelectedMatch(null)}
-              aria-label="Cerrar"
-            >
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
             <MatchCard
               match={selectedMatch}
               isToday={selectedMatch.date === todayKey}
               alwaysExpanded
+              onClose={() => setSelectedMatch(null)}
             />
           </div>
         )}

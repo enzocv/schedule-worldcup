@@ -19,11 +19,13 @@ export interface MatchCardProps {
   compact?: boolean;
   /** true → siempre expandido, sin opción de colapsar */
   alwaysExpanded?: boolean;
+  /** callback para cerrar el modal padre — si se pasa, muestra el botón X */
+  onClose?: () => void;
 }
 
-// ─── Componente ───────────────────────────────────────────────
+// ─── Componente ────────────────────────────────────────────
 
-export default function MatchCard({ match, isToday = false, compact = false, alwaysExpanded = false }: MatchCardProps) {
+export default function MatchCard({ match, isToday = false, compact = false, alwaysExpanded = false, onClose }: MatchCardProps) {
   const [isExpanded, setIsExpanded] = useState(isToday || Boolean(match.isLive) || alwaysExpanded);
   const { toggleSelection, isSelected } = useBetting();
 
@@ -58,8 +60,27 @@ export default function MatchCard({ match, isToday = false, compact = false, alw
   // ── Vista agenda (toggle expand/collapse) ─────────────────
   return (
     <article className={styles.card}>
-      {match.isLive && match.liveStream && (
-        <div className={`${styles.liveBannerWrap}${alwaysExpanded ? ' liveBannerWrapModal' : ''}`}>
+      {onClose && (
+        <div className={styles.headerWrapModalEvent}>
+          {match.isLive && match.liveStream && (
+            <div className={`${styles.liveBannerWrap}${alwaysExpanded ? ' liveBannerWrapModal' : ''}`}>
+              <LiveBanner label={match.liveStream.label} />
+            </div>
+          )}
+          <button
+            type="button"
+            className={styles.closeBtnHeader}
+            onClick={onClose}
+            aria-label="Cerrar"
+          >
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+      )}
+      {!onClose && match.isLive && match.liveStream && (
+        <div className={styles.liveBannerWrap}>
           <LiveBanner label={match.liveStream.label} />
         </div>
       )}
