@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useSchedule } from '@/lib/hooks/useSchedule';
 import { SportMatch } from '@/lib/types/schedule.types';
-import { useBetting } from '@/lib/context/BettingContext';
+import { useBetting } from '@/lib/store/hooks';
 import AppBar from '../AppBar/AppBar';
 import ScheduleHeader from '../ScheduleHeader/ScheduleHeader';
 import MonthHeader from '../MonthHeader/MonthHeader';

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { SportMatch } from '@/lib/types/schedule.types';
-import { useBetting } from '@/lib/context/BettingContext';
+import { useBetting } from '@/lib/store/hooks';
 import { ChevronDownIcon, ChevronUpIcon, ClockIcon, GlobeIcon } from '@/components/ui/Icon';
 import LiveBanner from '../LiveBanner/LiveBanner';
 import MetaRow from './MetaRow';
