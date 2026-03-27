@@ -165,7 +165,7 @@ export default function BettingSlip({ isOpen, onClose }: BettingSlipProps) {
         </div>
 
         {/* Footer con botón apostar */}
-        {selections.length > 0 && (
+        {(selections.length > 0 || betPlaced) && (
           <div className={styles.footer}>
             {betPlaced ? (
               <p className={styles.successMsg}>¡Apuesta realizada con éxito!</p>
