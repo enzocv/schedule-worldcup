@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { DaySchedule, ScheduleViewMode } from '@/lib/types/schedule.types';
-import MatchCard from '../MatchCard/MatchCard';
+import { MatchCardFactory, MatchCardVariant } from '@/lib/patterns/MatchCardFactory';
 import styles from './DayGroup.module.css';
 
 export interface DayGroupProps {
@@ -11,7 +11,7 @@ export interface DayGroupProps {
 }
 
 export default function DayGroup({ day, viewMode }: DayGroupProps) {
-  const isCompact = viewMode !== 'agenda';
+  const cardVariant: MatchCardVariant = viewMode === 'agenda' ? 'agenda' : 'compact';
 
   return (
     <section
@@ -31,14 +31,9 @@ export default function DayGroup({ day, viewMode }: DayGroupProps) {
 
       {/* Columna derecha: lista de partidos */}
       <div className={styles.matchesCol}>
-        {day.matches.map((match) => (
-          <MatchCard
-            key={match.id}
-            match={match}
-            isToday={day.isToday}
-            compact={isCompact}
-          />
-        ))}
+        {day.matches.map((match) =>
+          MatchCardFactory.create(cardVariant, { match, isToday: day.isToday })
+        )}
       </div>
     </section>
   );

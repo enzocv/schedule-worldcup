@@ -4,11 +4,10 @@ import React, { useState } from 'react';
 import { useSchedule } from '@/lib/hooks/useSchedule';
 import { SportMatch } from '@/lib/types/schedule.types';
 import { useBetting } from '@/lib/store/hooks';
+import { VIEW_STRATEGIES } from '@/lib/patterns/ViewStrategy';
 import AppBar from '../AppBar/AppBar';
 import ScheduleHeader from '../ScheduleHeader/ScheduleHeader';
 import MonthHeader from '../MonthHeader/MonthHeader';
-import DayGroup from '../DayGroup/DayGroup';
-import WeeklyCalendarView from '../WeeklyCalendarView';
 import BettingSlip from '../BettingSlip/BettingSlip';
 import { CouponIcon } from '@/components/ui/Icon';
 import styles from './ScheduleView.module.css';
@@ -52,24 +51,17 @@ export default function ScheduleView({ matches, tournamentName, tournamentSubtit
       <main className={styles.main}>
         <MonthHeader monthName={currentMonthName} onToday={goToToday} />
 
-        {viewMode === 'week' ? (
-          <WeeklyCalendarView
-            daySchedules={daySchedules}
-            currentDate={currentDate}
-            todayKey={todayKey}
-          />
-        ) : (
-          <div className={styles.schedule} role="list" aria-label="Partidos por día">
-            {daySchedules.length === 0 ? (
-              <div className={styles.empty}>
-                <p>No hay eventos para este período.</p>
-              </div>
-            ) : (
-              daySchedules.map((day) => (
-                <DayGroup key={day.date} day={day} viewMode={viewMode} />
-              ))
-            )}
+        {daySchedules.length === 0 ? (
+          <div className={styles.empty}>
+            <p>No hay eventos para este período.</p>
           </div>
+        ) : (
+          VIEW_STRATEGIES[viewMode].renderSchedule({
+            daySchedules,
+            currentDate,
+            todayKey,
+            listClassName: styles.schedule,
+          })
         )}
       </main>
 

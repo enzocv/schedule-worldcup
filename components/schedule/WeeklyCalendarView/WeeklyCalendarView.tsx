@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { DaySchedule, SportMatch } from '@/lib/types/schedule.types';
 import Modal from '@/components/ui/Modal/Modal';
-import MatchCard from '../MatchCard/MatchCard';
+import { MatchCardFactory } from '@/lib/patterns/MatchCardFactory';
 import { CloseIcon } from '@/components/ui/Icon';
 import { toDateKey } from '@/lib/utils/date.utils';
 import OverflowPill from './OverflowPill';
@@ -226,14 +226,9 @@ export default function WeeklyCalendarView({
               </button>
             </div>
             <div className={styles.sheetList}>
-              {dayEventsSheet.matches.map((match) => (
-                <MatchCard
-                  key={match.id}
-                  match={match}
-                  isToday={match.date === todayKey}
-                  alwaysExpanded
-                />
-              ))}
+              {dayEventsSheet.matches.map((match) =>
+                MatchCardFactory.create('sheet', { match, isToday: match.date === todayKey })
+              )}
             </div>
           </div>
         </>
@@ -249,12 +244,11 @@ export default function WeeklyCalendarView({
       >
         {selectedMatch && (
           <div className={styles.modalMatchWrap}>
-            <MatchCard
-              match={selectedMatch}
-              isToday={selectedMatch.date === todayKey}
-              alwaysExpanded
-              onClose={() => setSelectedMatch(null)}
-            />
+            {MatchCardFactory.create('modal', {
+              match: selectedMatch,
+              isToday: selectedMatch.date === todayKey,
+              onClose: () => setSelectedMatch(null),
+            })}
           </div>
         )}
       </Modal>
