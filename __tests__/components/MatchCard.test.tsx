@@ -5,7 +5,7 @@ import MatchCard from '@/components/schedule/MatchCard/MatchCard';
 import { renderWithStore } from '../utils/renderWithStore';
 import { matchBase, matchWithOdds, matchLive, selectionMexico } from '../fixtures/matches';
 
-// ─── Vista compacta ───────────────────────────────────────────
+// Vista compacta
 
 describe('MatchCard — vista compacta', () => {
   it('muestra equipos, fase, hora y competición', () => {
@@ -22,7 +22,7 @@ describe('MatchCard — vista compacta', () => {
   });
 });
 
-// ─── Vista agenda — colapsado / expandido ─────────────────────
+// Vista agenda — colapsado / expandido
 
 describe('MatchCard — vista agenda (por defecto)', () => {
   it('muestra la cabecera con role="button" y aria-expanded="false"', () => {
@@ -67,7 +67,7 @@ describe('MatchCard — vista agenda (por defecto)', () => {
   });
 });
 
-// ─── Cuotas ───────────────────────────────────────────────────
+// Cuotas
 
 describe('MatchCard — cuotas', () => {
   it('muestra "Cuotas no disponibles aún" cuando no hay odds', () => {
@@ -125,7 +125,7 @@ describe('MatchCard — cuotas', () => {
   });
 });
 
-// ─── Siempre expandido ────────────────────────────────────────
+// Siempre expandido
 
 describe('MatchCard — alwaysExpanded', () => {
   it('muestra el cuerpo del partido sin necesidad de clic', () => {
@@ -143,7 +143,7 @@ describe('MatchCard — alwaysExpanded', () => {
   });
 });
 
-// ─── Botón cerrar (modal) ─────────────────────────────────────
+// Botón cerrar (modal)
 
 describe('MatchCard — botón cerrar', () => {
   it('muestra el botón cerrar cuando se pasa onClose', () => {
@@ -165,7 +165,7 @@ describe('MatchCard — botón cerrar', () => {
   });
 });
 
-// ─── Partido en vivo ──────────────────────────────────────────
+// Partido en vivo
 
 describe('MatchCard — partido en vivo', () => {
   it('muestra la etiqueta de transmisión en vivo', () => {

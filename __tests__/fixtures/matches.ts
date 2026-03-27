@@ -1,7 +1,7 @@
 import { SportMatch } from '@/lib/types/schedule.types';
 import type { BetSelection } from '@/lib/store/slices/bettingSlice';
 
-// ─── Base match (no odds, no live) ───────────────────────────
+// Partido base (sin cuotas ni en vivo)
 
 export const matchBase: SportMatch = {
   id: 'match-test-1',
@@ -13,7 +13,7 @@ export const matchBase: SportMatch = {
   phase: 'Grupo A',
 };
 
-// ─── Match with odds ──────────────────────────────────────────
+// Partido con cuotas
 
 export const matchWithOdds: SportMatch = {
   ...matchBase,
@@ -24,7 +24,7 @@ export const matchWithOdds: SportMatch = {
   },
 };
 
-// ─── Live match ───────────────────────────────────────────────
+// Partido en vivo
 
 export const matchLive: SportMatch = {
   ...matchWithOdds,
@@ -33,7 +33,7 @@ export const matchLive: SportMatch = {
   liveStream: { label: 'Mira aquí la transmisión con Jorge Luna' },
 };
 
-// ─── Second match (for multi-selection tests) ─────────────────
+// Segundo partido (para tests de selección múltiple)
 
 export const matchB: SportMatch = {
   id: 'match-test-2',
@@ -45,7 +45,7 @@ export const matchB: SportMatch = {
   phase: 'Grupo E',
 };
 
-// ─── Pre-built BetSelection fixtures ─────────────────────────
+// Selecciones pre-construidas
 
 export const selectionMexico: BetSelection = {
   matchId: matchWithOdds.id,

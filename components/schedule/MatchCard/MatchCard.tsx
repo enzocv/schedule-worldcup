@@ -9,7 +9,7 @@ import MetaRow from './MetaRow';
 import { MARKET_BADGES } from './MatchCard.constants';
 import styles from './MatchCard.module.css';
 
-// ─── Props principales ────────────────────────────────────────
+// Props principales
 
 export interface MatchCardProps {
   match: SportMatch;
@@ -23,7 +23,7 @@ export interface MatchCardProps {
   onClose?: () => void;
 }
 
-// ─── Componente ────────────────────────────────────────────
+// Componente
 
 export default function MatchCard({ match, isToday = false, compact = false, alwaysExpanded = false, onClose }: MatchCardProps) {
   const [isExpanded, setIsExpanded] = useState(isToday || Boolean(match.isLive) || alwaysExpanded);
@@ -33,7 +33,7 @@ export default function MatchCard({ match, isToday = false, compact = false, alw
 
   const matchLabel = `${match.homeTeam.name} vs ${match.awayTeam.name}`;
 
-  // ── Vista compacta (3 Días / Semana) ─────────────────────
+  // Vista compacta (3 Días / Semana)
   if (compact) {
     return (
       <div className={styles.compact}>
@@ -57,7 +57,7 @@ export default function MatchCard({ match, isToday = false, compact = false, alw
     );
   }
 
-  // ── Vista agenda (toggle expand/collapse) ─────────────────
+  // Vista agenda (toggle expand/collapse)
   return (
     <article className={styles.card}>
       {onClose && (

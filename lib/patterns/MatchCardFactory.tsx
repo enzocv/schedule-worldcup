@@ -4,13 +4,11 @@ import React from 'react';
 import { SportMatch } from '../types/schedule.types';
 import MatchCard from '@/components/schedule/MatchCard/MatchCard';
 
-// ─── Variants ─────────────────────────────────────────────────
-//
-// Each variant maps to a distinct visual mode of MatchCard:
-// - agenda   : collapsible card in the list view
-// - compact  : minimal single-line card for 3-days view
-// - modal    : fully expanded with a close (×) button for overlay context
-// - sheet    : fully expanded without close button for the overflow bottom sheet
+// Variantes disponibles para MatchCard:
+// - agenda  : tarjeta plegable en la vista de lista
+// - compact : tarjeta compacta de una línea para la vista de 3 días
+// - modal   : expandida con botón de cierre (×) para overlay
+// - sheet   : expandida sin botón de cierre para el bottom sheet
 
 export type MatchCardVariant = 'agenda' | 'compact' | 'modal' | 'sheet';
 
@@ -20,11 +18,8 @@ export interface MatchCardFactoryOptions {
   onClose?: () => void;
 }
 
-// ─── Factory ──────────────────────────────────────────────────
-//
-// Centralizes all card-creation decisions. Callers only need to
-// declare intent ("create me a modal card") — prop details are
-// an implementation concern of the factory, not the consumer.
+// Fábrica centralizada de tarjetas.
+// El consumidor solo declara la variante; los props concretos son responsabilidad de la fábrica.
 
 class MatchCardFactoryImpl {
   create(variant: MatchCardVariant, options: MatchCardFactoryOptions): React.ReactElement {

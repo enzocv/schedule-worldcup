@@ -5,29 +5,26 @@ import { DaySchedule, ScheduleViewMode } from '../types/schedule.types';
 import DayGroup from '@/components/schedule/DayGroup/DayGroup';
 import WeeklyCalendarView from '@/components/schedule/WeeklyCalendarView';
 
-// ─── Context passed to every strategy ────────────────────────
+// Contexto que recibe cada estrategia
 
 export interface ViewStrategyContext {
   daySchedules: DaySchedule[];
   currentDate: Date;
   todayKey: string;
-  /** CSS class for the outer list wrapper. Only used by list-based strategies. */
+  /** Clase CSS del wrapper exterior. Solo la usan estrategias basadas en lista. */
   listClassName?: string;
 }
 
-// ─── Interface ────────────────────────────────────────────────
-//
-// Each view mode is an independent strategy. Adding a new mode
-// (e.g. 'month') means creating a new strategy object and
-// registering it in VIEW_STRATEGIES — the ScheduleView component
-// never needs to be touched.
+// Interfaz de estrategia de vista.
+// Añadir un nuevo modo (ej. 'month') solo requiere crear un nuevo objeto
+// y registrarlo en VIEW_STRATEGIES; ScheduleView no necesita cambios.
 
 export interface ViewStrategy {
   readonly mode: ScheduleViewMode;
   renderSchedule(ctx: ViewStrategyContext): React.ReactNode;
 }
 
-// ─── Concrete strategies ──────────────────────────────────────
+// Estrategias concretas
 
 const agendaStrategy: ViewStrategy = {
   mode: 'agenda',
@@ -70,7 +67,7 @@ const weekStrategy: ViewStrategy = {
   ),
 };
 
-// ─── Registry ────────────────────────────────────────────────
+// Registro de estrategias
 
 export const VIEW_STRATEGIES: Record<ScheduleViewMode, ViewStrategy> = {
   agenda: agendaStrategy,

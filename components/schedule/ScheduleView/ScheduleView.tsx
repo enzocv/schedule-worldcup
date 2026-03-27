@@ -12,7 +12,7 @@ import BettingSlip from '../BettingSlip/BettingSlip';
 import { CouponIcon } from '@/components/ui/Icon';
 import styles from './ScheduleView.module.css';
 
-// ─── Props ─────────────────────────────────────────────
+// Props
 
 export interface ScheduleViewProps {
   matches?: SportMatch[];

@@ -6,7 +6,7 @@ import { CouponIcon, CloseIcon, TrashIcon } from '@/components/ui/Icon';
 import { MONTH_NAMES_SHORT_ES } from '@/lib/utils/locale';
 import styles from './BettingSlip.module.css';
 
-// ─── Componente principal ─────────────────────────────────────
+// Componente principal
 
 export interface BettingSlipProps {
   isOpen: boolean;

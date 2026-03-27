@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { bettingSlice, bettingActions } from '@/lib/store/slices/bettingSlice';
 import { selectionMexico, selectionEmpate, selectionSuecia } from '../fixtures/matches';
 
-// ─── Helpers ─────────────────────────────────────────────────
+// Helpers
 
 function makeStore() {
   return configureStore({ reducer: { betting: bettingSlice.reducer } });
@@ -12,7 +12,7 @@ function getSelections(store: ReturnType<typeof makeStore>) {
   return store.getState().betting.selections;
 }
 
-// ─── Tests ───────────────────────────────────────────────────
+// Tests
 
 describe('bettingSlice', () => {
   describe('estado inicial', () => {
