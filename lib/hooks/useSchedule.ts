@@ -5,25 +5,15 @@ import {
   ScheduleViewMode,
   DaySchedule,
   SportMatch,
-  MatchPhase,
 } from '../types/schedule.types';
 import { WORLDCUP_2026_MATCHES } from '../data/worldcup2026';
-
-const DAY_LABELS_ES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-const MONTH_NAMES_ES = [
-  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
-];
-
-function toDateKey(date: Date): string {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0'),
-  ].join('-');
-}
+import { toDateKey } from '../utils/date.utils';
+import { MONTH_NAMES_ES } from '../utils/locale';
+import { IMatchRepository, StaticMatchRepository } from '../patterns/MatchRepository';
 
 export interface UseScheduleOptions {
+  /** Repositorio de partidos. Tiene prioridad sobre `matches`. */
+  repository?: IMatchRepository;
   matches?: SportMatch[];
   initialViewMode?: ScheduleViewMode;
   /** Fecha inicial personalizada. Por defecto: primer partido del dataset. */
@@ -31,17 +21,24 @@ export interface UseScheduleOptions {
 }
 
 export function useSchedule({
+  repository,
   matches = WORLDCUP_2026_MATCHES,
   initialViewMode = 'agenda',
   initialDate,
 }: UseScheduleOptions = {}) {
   const todayKey = useMemo(() => toDateKey(new Date()), []);
 
+  const repo = useMemo(
+    () => repository ?? new StaticMatchRepository(matches),
+    [repository, matches],
+  );
+
   const [viewMode, setViewMode] = useState<ScheduleViewMode>(initialViewMode);
-  const [phaseFilter, setPhaseFilter] = useState<MatchPhase | null>(null);
   const [currentDate, setCurrentDate] = useState<Date>(() => {
     if (initialDate) return initialDate;
-    if (matches.length > 0) return new Date(matches[0].date + 'T00:00:00');
+    const allMatches = repository?.getAll() ?? matches;
+    const first = allMatches.at(0);
+    if (first) return new Date(first.date + 'T00:00:00');
     return new Date();
   });
 
@@ -52,31 +49,10 @@ export function useSchedule({
   );
 
   // ── Derived: all days grouped ─────────────────────────────
-  const allDaySchedules = useMemo((): DaySchedule[] => {
-    const filtered = phaseFilter
-      ? matches.filter((m) => m.phase === phaseFilter)
-      : matches;
-
-    const grouped = new Map<string, SportMatch[]>();
-    for (const match of filtered) {
-      if (!grouped.has(match.date)) grouped.set(match.date, []);
-      grouped.get(match.date)!.push(match);
-    }
-
-    return Array.from(grouped.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([date, dayMatches]) => {
-        const d = new Date(date + 'T00:00:00');
-        return {
-          date,
-          dayLabel: DAY_LABELS_ES[d.getDay()],
-          dayNumber: d.getDate(),
-          monthName: MONTH_NAMES_ES[d.getMonth()],
-          isToday: date === todayKey,
-          matches: dayMatches,
-        };
-      });
-  }, [matches, phaseFilter, todayKey]);
+  const allDaySchedules = useMemo(
+    () => repo.toDaySchedules(todayKey),
+    [repo, todayKey],
+  );
 
   // ── Derived: visible days for current view/date ───────────
   const daySchedules = useMemo((): DaySchedule[] => {
@@ -141,8 +117,6 @@ export function useSchedule({
     currentDate,
     currentMonthName: visibleMonthName,
     daySchedules,
-    phaseFilter,
-    setPhaseFilter,
     goToToday,
     goToPrevious,
     goToNext,

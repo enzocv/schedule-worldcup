@@ -3,42 +3,20 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { DaySchedule, SportMatch } from '@/lib/types/schedule.types';
 import Modal from '@/components/ui/Modal/Modal';
-import MatchCard from '../MatchCard/MatchCard';
-import { GlobeIcon } from '@/components/ui/Icon';
+import { MatchCardFactory } from '@/lib/patterns/MatchCardFactory';
+import { CloseIcon } from '@/components/ui/Icon';
+import { toDateKey } from '@/lib/utils/date.utils';
+import OverflowPill from './OverflowPill';
+import WeekEventCard from './WeekEventCard';
+import {
+  HOUR_HEIGHT,
+  HOURS,
+  DAY_LABELS,
+  OVERFLOW_THRESHOLD,
+  timeToMinutes,
+  formatHour,
+} from './WeeklyCalendarView.utils';
 import styles from './WeeklyCalendarView.module.css';
-
-// ─── Constants ────────────────────────────────────────────────
-
-const HOUR_HEIGHT = 64; // px per hour
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
-const DAY_LABELS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-const OVERFLOW_THRESHOLD = 2; // más de este número → mostrar pill
-
-// ─── Helpers ──────────────────────────────────────────────────
-
-function toDateKey(date: Date): string {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0'),
-  ].join('-');
-}
-
-function timeToMinutes(time: string): number {
-  const [h, m] = time.split(':').map(Number);
-  return h * 60 + (m ?? 0);
-}
-
-function formatHour(h: number): { label: string; period: string } {
-  if (h === 0) return { label: '12:00', period: 'AM' };
-  if (h < 12) return { label: `${h}:00`, period: 'AM' };
-  if (h === 12) return { label: '12:00', period: 'PM' };
-  return { label: `${h - 12}:00`, period: 'PM' };
-}
-
-function abbrev(name: string): string {
-  return name.substring(0, 3).toUpperCase();
-}
 
 // ─── Types ────────────────────────────────────────────────────
 
@@ -48,87 +26,6 @@ interface WeekDay {
   number: number;
   isToday: boolean;
   matches: SportMatch[];
-}
-
-// ─── Sub-components ───────────────────────────────────────────
-
-interface OverflowPillProps {
-  count: number;
-  topPx: number;
-  onClick: () => void;
-}
-
-function OverflowPill({ count, topPx, onClick }: OverflowPillProps) {
-  return (
-    <button
-      type="button"
-      className={styles.overflowPill}
-      style={{ top: `${topPx}px` }}
-      onClick={onClick}
-      aria-label={`Ver ${count} eventos`}
-    >
-      <span className={styles.overflowCount}>{count}</span>
-      <span className={styles.overflowLabel}>Eventos</span>
-    </button>
-  );
-}
-
-interface EventCardProps {
-  match: SportMatch;
-  onClick: (match: SportMatch) => void;
-  grouped?: boolean;
-}
-
-function WeekEventCard({ match, onClick, grouped }: EventCardProps) {
-  const topPx = (timeToMinutes(match.time) / 60) * HOUR_HEIGHT;
-  const isTbd = match.homeTeam.name === 'Por definir' && match.awayTeam.name === 'Por definir';
-
-  if (isTbd) {
-    return (
-      <div
-        className={`${styles.eventCard} ${styles.eventCardTbd} ${grouped ? styles.eventCardGrouped : ''}`}
-        style={grouped ? undefined : { top: `${topPx}px` }}
-        aria-label={`Partido por definir, ${match.phase}`}
-      >
-        <div className={styles.tbdIconRow}>
-          <GlobeIcon size={13} />
-        </div>
-        <span className={styles.tbdTeam}>Por definir</span>
-        <span className={styles.tbdTeam}>Por definir</span>
-        <span className={styles.eventPhase}>{match.phase}</span>
-      </div>
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      className={`${styles.eventCard} ${match.isLive ? styles.eventCardLive : ''} ${grouped ? styles.eventCardGrouped : ''}`}
-      style={grouped ? undefined : { top: `${topPx}px` }}
-      aria-label={`Ver ${match.homeTeam.name} vs ${match.awayTeam.name}, ${match.time}`}
-      onClick={() => onClick(match)}
-    >
-      <div className={styles.eventTeamRow}>
-        {match.homeTeam.flagEmoji && (
-          <span className={styles.eventFlag}>{match.homeTeam.flagEmoji}</span>
-        )}
-        <span className={styles.eventTeamName}>{abbrev(match.homeTeam.name)}</span>
-        {match.result !== undefined && (
-          <span className={styles.eventScore}>{match.result.homeScore}</span>
-        )}
-      </div>
-      <div className={styles.eventTeamRow}>
-        {match.awayTeam.flagEmoji && (
-          <span className={styles.eventFlag}>{match.awayTeam.flagEmoji}</span>
-        )}
-        <span className={styles.eventTeamName}>{abbrev(match.awayTeam.name)}</span>
-        {match.result !== undefined && (
-          <span className={styles.eventScore}>{match.result.awayScore}</span>
-        )}
-      </div>
-      <span className={styles.eventPhase}>{match.phase}</span>
-    </button>
-  );
 }
 
 // ─── Props ────────────────────────────────────────────────────
@@ -325,20 +222,13 @@ export default function WeeklyCalendarView({
                 onClick={() => setDayEventsSheet(null)}
                 aria-label="Cerrar"
               >
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className={styles.sheetList}>
-              {dayEventsSheet.matches.map((match) => (
-                <MatchCard
-                  key={match.id}
-                  match={match}
-                  isToday={match.date === todayKey}
-                  alwaysExpanded
-                />
-              ))}
+              {dayEventsSheet.matches.map((match) =>
+                MatchCardFactory.create('sheet', { match, isToday: match.date === todayKey })
+              )}
             </div>
           </div>
         </>
@@ -354,12 +244,11 @@ export default function WeeklyCalendarView({
       >
         {selectedMatch && (
           <div className={styles.modalMatchWrap}>
-            <MatchCard
-              match={selectedMatch}
-              isToday={selectedMatch.date === todayKey}
-              alwaysExpanded
-              onClose={() => setSelectedMatch(null)}
-            />
+            {MatchCardFactory.create('modal', {
+              match: selectedMatch,
+              isToday: selectedMatch.date === todayKey,
+              onClose: () => setSelectedMatch(null),
+            })}
           </div>
         )}
       </Modal>

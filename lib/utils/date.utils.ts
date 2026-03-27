@@ -2,8 +2,6 @@
  * Utilidades para manejo de fechas
  */
 
-import { CalendarDay, CalendarMonth, MONTH_NAMES } from '../types/calendar.types';
-
 /**
  * Obtiene el número de días en un mes específico
  */
@@ -41,7 +39,7 @@ export function isWeekend(date: Date): boolean {
 /**
  * Formatea una fecha a string ISO (YYYY-MM-DD)
  */
-export function formatDateToISO(date: Date): string {
+export function toDateKey(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -80,81 +78,6 @@ export function isSameDay(date1: Date, date2: Date): boolean {
     date1.getMonth() === date2.getMonth() &&
     date1.getFullYear() === date2.getFullYear()
   );
-}
-
-/**
- * Genera un array de días para un mes específico
- */
-export function generateMonthDays(year: number, month: number): CalendarDay[] {
-  const days: CalendarDay[] = [];
-  const daysInMonth = getDaysInMonth(year, month);
-  const firstDayOfWeek = getFirstDayOfMonth(year, month);
-
-  // Días del mes anterior (para completar la primera semana)
-  const prevMonth = month === 0 ? 11 : month - 1;
-  const prevYear = month === 0 ? year - 1 : year;
-  const daysInPrevMonth = getDaysInMonth(prevYear, prevMonth);
-
-  for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-    const dayNumber = daysInPrevMonth - i;
-    const date = new Date(prevYear, prevMonth, dayNumber);
-    days.push({
-      date,
-      dayNumber,
-      isCurrentMonth: false,
-      isToday: isToday(date),
-      isWeekend: isWeekend(date),
-      events: [],
-    });
-  }
-
-  // Días del mes actual
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(year, month, day);
-    days.push({
-      date,
-      dayNumber: day,
-      isCurrentMonth: true,
-      isToday: isToday(date),
-      isWeekend: isWeekend(date),
-      events: [],
-    });
-  }
-
-  // Días del mes siguiente (para completar la última semana)
-  const remainingDays = 42 - days.length; // 6 semanas * 7 días
-  const nextMonth = month === 11 ? 0 : month + 1;
-  const nextYear = month === 11 ? year + 1 : year;
-
-  for (let day = 1; day <= remainingDays; day++) {
-    const date = new Date(nextYear, nextMonth, day);
-    days.push({
-      date,
-      dayNumber: day,
-      isCurrentMonth: false,
-      isToday: isToday(date),
-      isWeekend: isWeekend(date),
-      events: [],
-    });
-  }
-
-  return days;
-}
-
-/**
- * Genera datos completos del mes para el calendario
- */
-export function generateCalendarMonth(year: number, month: number): CalendarMonth {
-  const days = generateMonthDays(year, month);
-  const weeksInMonth = Math.ceil(days.length / 7);
-
-  return {
-    year,
-    month,
-    monthName: MONTH_NAMES[month],
-    days,
-    weeksInMonth,
-  };
 }
 
 /**
