@@ -24,6 +24,8 @@ export default function ScheduleView({ matches, tournamentName, tournamentSubtit
   const [slipOpen, setSlipOpen] = useState(false);
   const { selections } = useBetting();
 
+  const x: number = "esto falla"; // error de TypeScript - test 2
+
   const {
     viewMode,
     setViewMode,
